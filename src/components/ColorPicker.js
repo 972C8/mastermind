@@ -8,10 +8,10 @@ class ColorPicker extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    //Set currentColor to the picked color
+    //Set currentColor to the selected color
     //onColorChange() was passed from Board.js
     handleChange(event) {
-        this.props.onColorChange(event.target.value);
+        this.props.onColorSelected(event.target.value);
     }
 
     render() {

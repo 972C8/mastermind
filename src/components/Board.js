@@ -13,10 +13,10 @@ class Board extends React.Component {
             currentColor: "white",
         };
 
-        this.handleColorChange = this.handleColorChange.bind(this);
+        this.setCurrentColor = this.setCurrentColor.bind(this);
     }
 
-    handleColorChange(color) {
+    setCurrentColor(color) {
         this.setState({
             currentColor: color
         });
@@ -28,21 +28,26 @@ class Board extends React.Component {
         return this.state.turn !== rowNum;
     }
 
-    render() {
-        //All available colors
-        const colors = ["red", "blue", "yellow", "green", "orange"];
-
-        //Create board with amount of rows corresponding to maxAttempts
+    //Create amount of rows corresponding to maxAttempts for the board
+    renderRows() {
         const board = [];
         for (let i = 1; i <= this.state.maxAttempts; i++) {
             //disable all rows except for the current turn's row
             board.push(<Row key={i} isDisabled={this.isDisabled(i)} currentColor={this.state.currentColor}/>)
         }
+        return board;
+    }
 
+    render() {
+        //All available colors
+        const colors = ["red", "blue", "yellow", "green", "orange"];
+
+        //render the board consisting of rows
+        const board = this.renderRows();
         return (
             <div>
                 {board}
-                <ColorPicker colors={colors} onColorChange={this.handleColorChange}/>
+                <ColorPicker colors={colors} onColorSelected={this.setCurrentColor}/>
             </div>
         );
     }

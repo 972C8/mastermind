@@ -10,7 +10,15 @@ class Peg extends React.Component {
     }
 
     handleChange() {
-        this.setState({color: this.props.currentColor});
+        const currentColor = this.props.currentColor;
+        const pos = this.props.pos;
+
+        //A row must not have the same color twice
+        if (this.props.isValidColor(currentColor)) {
+            this.setState({color: currentColor});
+            //Update row array of colors
+            this.props.setNewColor(pos, currentColor);
+        }
     }
 
     render() {
