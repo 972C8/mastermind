@@ -1,5 +1,5 @@
 import React from 'react';
-import CodeRow from "./CodeRow";
+import Row from "./Row";
 import ColorPicker from "./ColorPicker";
 
 class Board extends React.Component {
@@ -9,7 +9,8 @@ class Board extends React.Component {
 
         this.state = {
             maxAttempts: 6,
-            currentColor: null
+            turn: 1,
+            currentColor: "white",
         };
 
         this.handleColorChange = this.handleColorChange.bind(this);
@@ -21,6 +22,12 @@ class Board extends React.Component {
         });
     }
 
+    //All rows except the current turn's should be disabled
+    isDisabled(rowNum) {
+        //Only returns true if current turn matches the current row
+        return this.state.turn !== rowNum;
+    }
+
     render() {
         //All available colors
         const colors = ["red", "blue", "yellow", "green", "orange"];
@@ -28,13 +35,13 @@ class Board extends React.Component {
         //Create board with amount of rows corresponding to maxAttempts
         const board = [];
         for (let i = 1; i <= this.state.maxAttempts; i++) {
-            board.push(<CodeRow key={i}/>)
+            //disable all rows except for the current turn's row
+            board.push(<Row key={i} isDisabled={this.isDisabled(i)} currentColor={this.state.currentColor}/>)
         }
 
         return (
             <div>
                 {board}
-
                 <ColorPicker colors={colors} onColorChange={this.handleColorChange}/>
             </div>
         );
