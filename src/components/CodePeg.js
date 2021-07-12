@@ -1,6 +1,6 @@
 import React from 'react';
 
-class CodePegs extends React.Component {
+class CodePeg extends React.Component {
 
     constructor(props) {
         super(props)
@@ -9,7 +9,7 @@ class CodePegs extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(event) {
+    handleChange() {
         this.setState({color: 'blue'});
     }
 
@@ -20,4 +20,4 @@ class CodePegs extends React.Component {
     }
 }
 
-export default CodePegs;
+export default CodePeg;
