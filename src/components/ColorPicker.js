@@ -19,11 +19,11 @@ class ColorPicker extends React.Component {
 
         //Create a button for each color
         const colorButtons = colors.map((color) =>
-            <button key={color} value={color} onClick={this.handleChange}>{color}</button>
+            <button key={color} value={color} className={"colorpicker btn-peg btn-" + color} onClick={this.handleChange}/>
         )
 
         return (
-            <div>{colorButtons}</div>
+            <div className="colorpicker">{colorButtons}</div>
         );
     }
 

@@ -49,9 +49,11 @@ class Row extends React.Component {
         for (let pos = 0; pos < 4; pos++) {
             const color = pegs[pos];
             //Create button representing a peg
-            row.push(<button key={pos} value={color} onClick={() => this.handlePegChange(pos)}>{color}</button>)
+            row.push(<button key={pos} value={color} className={"btn-peg btn-" + color}
+                             onClick={() => this.handlePegChange(pos)}/>)
         }
-        row.push(<button key={"btn" + this.props.row} onClick={this.handleCodeGuess}>Confirm</button>)
+        row.push(<button key={"btn" + this.props.row} className={"btn-confirm"}
+                         onClick={this.handleCodeGuess}>Confirm</button>)
         row.push(<Evaluation key={"key" + this.props.row} keyPegs={this.state.keyPegs}/>)
         return row;
     }
@@ -61,7 +63,7 @@ class Row extends React.Component {
 
         return (
             //conditionally add class attribute "disabled"
-            <div className={this.props.isDisabled ? "disabled" : undefined}>
+            <div className={"row" + (this.props.isDisabled ? " disabled" : "")}>
                 {row}
             </div>
         );
