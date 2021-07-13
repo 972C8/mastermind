@@ -25,11 +25,19 @@ class Row extends React.Component {
 
     //Call function to evaluate guessed code and store evaluation in state keyPegs
     handleCodeGuess() {
-        const keyPegs = this.props.evaluateCodeGuess();
+        const rowPegs = this.props.rowPegs;
 
-        this.setState({
-            keyPegs: keyPegs
-        })
+        //Row must not contain white as a color for all pegs must be selected
+        if (!rowPegs.includes("white")) {
+            const keyPegs = this.props.evaluateCodeGuess();
+
+            this.setState({
+                keyPegs: keyPegs
+            })
+        } else {
+            //TODO: Popup to select a color for all pegs
+            console.log("Select a color for all pegs!")
+        }
     }
 
     //Render a row consisting of 4 pegs (buttons)

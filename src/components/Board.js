@@ -10,7 +10,7 @@ class Board extends React.Component {
         this.state = {
             maxRows: 6,
             turn: 0,
-            colors: ["red", "blue", "yellow", "green", "orange"],
+            colors: ["red", "blue", "yellow", "green", "orange", "purple", "lime", "pink"],
             currentColor: "red",
             board: null,
             gameCode: null
