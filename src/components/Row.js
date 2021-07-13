@@ -5,36 +5,16 @@ class Row extends React.Component {
     constructor(props) {
         super(props)
 
-        this.isValidColor = this.isValidColor.bind(this);
         this.handlePegChange = this.handlePegChange.bind(this);
-    }
-
-    //TODO: Fix method isValidColor
-    //A row must not have the same color twice
-    isValidColor(newColor) {
-        return true;
-        /*
-        const rowPegs = this.state.rowPegs;
-
-        //Only return true if the new color is not yet in rowPegs
-        if (!rowPegs.includes(newColor)) {
-            this.setState(rowPegs)
-            return true;
-        }
-        return false;
-        */
     }
 
     //Called when a peg changes its color
     handlePegChange(pegPos) {
-        const currentColor = this.props.currentColor;
         const row = this.props.row;
+        const currentColor = this.props.currentColor;
 
-        //A row must not have the same color twice
-        if (this.isValidColor(currentColor)) {
-            //Update row array of colors
-            this.props.updateColor(row, pegPos, currentColor);
-        }
+        //Callback to function with peg data
+        this.props.updateColor(row, pegPos, currentColor);
     }
 
     //Render a row consisting of 4 pegs (buttons)

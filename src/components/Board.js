@@ -15,7 +15,7 @@ class Board extends React.Component {
             board: this.initializeBoard(6)
         };
 
-        this.setCurrentColor = this.setCurrentColor.bind(this);
+        this.setSelectedColor = this.setSelectedColor.bind(this);
         this.updateColor = this.updateColor.bind(this);
     }
 
@@ -30,19 +30,6 @@ class Board extends React.Component {
         return board;
     }
 
-    //Update board state with the new color peg
-    updateColor(rowPos, pegPos, newPegColor) {
-        //Update board with new color for relevant peg of row
-        const board = this.state.board.slice();
-
-        //Update color at given board position
-        board[rowPos][pegPos] = newPegColor;
-
-        this.setState({
-            board: board
-        })
-    }
-
     //Create amount of rows corresponding to maxRows for the board
     renderRows() {
         const board = [];
@@ -54,13 +41,45 @@ class Board extends React.Component {
         return board;
     }
 
-    setCurrentColor(color) {
+    //Update board state with the new color peg
+    //If the color already exists in the row. Swap the positions of the two colors for user convenience.
+    updateColor(rowPos, pegPos, newPegColor) {
+        //Update board with new color for relevant peg of row
+        const board = this.state.board.slice();
+
+        //colorPos represents where the new color was used in the row array (0,1,2,3)
+        //Note: colorPos is -1 if the color was not used yet
+        const currentRow = board[rowPos];
+        const colorPos = currentRow.indexOf(newPegColor);
+
+        //Swap colors of the two pegs
+        if (colorPos >= 0 && colorPos !== pegPos) {
+            //Get color of selected peg
+            const selectedPegColor = board[rowPos][pegPos];
+
+            //Update selected peg with new color
+            board[rowPos][pegPos] = newPegColor;
+
+            //Update old peg with color of selected peg
+            board[rowPos][colorPos] = selectedPegColor;
+        } else {
+            //Update color at given board position
+            board[rowPos][pegPos] = newPegColor;
+        }
+
+        this.setState({
+            board: board
+        })
+    }
+
+//Set the currently selected color
+    setSelectedColor(color) {
         this.setState({
             currentColor: color
         });
     }
 
-    //All rows except the current turn's should be disabled
+//All rows except the current turn's should be disabled
     isDisabled(rowNum) {
         //Only returns true if current turn matches the current row
         return this.state.turn !== rowNum;
@@ -72,7 +91,7 @@ class Board extends React.Component {
         return (
             <div>
                 {board}
-                <ColorPicker colors={this.state.colors} onColorSelected={this.setCurrentColor}/>
+                <ColorPicker colors={this.state.colors} onColorSelected={this.setSelectedColor}/>
             </div>
         );
     }
