@@ -12,11 +12,39 @@ class Board extends React.Component {
             turn: 0,
             colors: ["red", "blue", "yellow", "green", "orange"],
             currentColor: "white",
-            board: this.initializeBoard(6)
+            board: null,
+            gameCode: null
         };
 
         this.setSelectedColor = this.setSelectedColor.bind(this);
         this.updateColor = this.updateColor.bind(this);
+        this.makeCodeGuess = this.makeCodeGuess.bind(this);
+    }
+
+    //Initialize game data
+    componentDidMount() {
+        const board = this.initializeBoard(this.state.maxRows);
+        const code = this.createNewCode(this.state.colors);
+
+        this.setState({
+            board: board,
+            gameCode: code,
+        })
+    }
+
+    //Creates a new unique code of 4 colors from all existing colors
+    createNewCode(colors) {
+        // Make a copy of the array
+        var tmp = colors.slice(colors);
+        var code = [];
+
+        for (var i = 0; i < 4; i++) {
+            var index = Math.floor(Math.random() * tmp.length);
+            var removed = tmp.splice(index, 1);
+            // Since we are only removing one element
+            code.push(removed[0]);
+        }
+        return code;
     }
 
     //Create new board with default pegs
@@ -34,9 +62,14 @@ class Board extends React.Component {
     renderRows() {
         const board = [];
         for (let i = 0; i < this.state.maxRows; i++) {
+            //board[i] doesn't exist before board is initialized
+            const rowPegs = this.state.board ? this.state.board[i] : [];
+
             //disable all rows except for the current turn's row
-            board.push(<Row key={i} isDisabled={this.isDisabled(i)} updateColor={this.updateColor}
-                            currentColor={this.state.currentColor} rowPegs={this.state.board[i]} row={i}/>)
+            const row = <Row key={i} isDisabled={this.isDisabled(i)} handleAttempt={this.makeCodeGuess}
+                             updateColor={this.updateColor}
+                             currentColor={this.state.currentColor} rowPegs={rowPegs} row={i}/>;
+            board.push(row)
         }
         return board;
     }
@@ -55,16 +88,16 @@ class Board extends React.Component {
         //Swap colors of the two pegs
         if (colorPos >= 0 && colorPos !== pegPos) {
             //Get color of selected peg
-            const selectedPegColor = board[rowPos][pegPos];
+            const selectedPegColor = currentRow[pegPos];
 
             //Update selected peg with new color
-            board[rowPos][pegPos] = newPegColor;
+            currentRow[pegPos] = newPegColor;
 
             //Update old peg with color of selected peg
-            board[rowPos][colorPos] = selectedPegColor;
+            currentRow[colorPos] = selectedPegColor;
         } else {
             //Update color at given board position
-            board[rowPos][pegPos] = newPegColor;
+            currentRow[pegPos] = newPegColor;
         }
 
         this.setState({
@@ -72,17 +105,55 @@ class Board extends React.Component {
         })
     }
 
-//Set the currently selected color
+    //Set the currently selected color
     setSelectedColor(color) {
         this.setState({
             currentColor: color
         });
     }
 
-//All rows except the current turn's should be disabled
+    //All rows except the current turn's should be disabled
     isDisabled(rowNum) {
         //Only returns true if current turn matches the current row
         return this.state.turn !== rowNum;
+    }
+
+    //Evaluate the guessed code
+    //Create evaluation of red and white pins
+    makeCodeGuess() {
+        //Current row according to user's turn
+        const guess = this.state.board[this.state.turn];
+        const code = this.state.gameCode;
+
+        //Return true if guess is correct
+        if (code.join(',') === guess.join(',')) {
+            //Todo: return true
+            console.log("success")
+        }
+
+        //Create evaluation array consisting of red and white pins
+        //White pin = color is correct
+        //Red pin = color and position is correct
+        var evaluation = [];
+        guess.forEach((peg, key) => {
+            if (code.includes(peg)) {
+                //peg color and position match -> red pin
+                if (code.indexOf(peg) === key) {
+                    evaluation.push("red");
+                } else {
+                    //only peg color matches
+                    evaluation.push("white");
+                }
+            }
+        })
+        //Sort the pins by color
+        evaluation.sort();
+
+        //TODO: remove debuggers
+        console.log(evaluation);
+        console.log(code)
+
+        //TODO: Update pins
     }
 
     render() {

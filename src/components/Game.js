@@ -1,7 +1,7 @@
 import Board from './Board.js';
-import '../styles/App.css';
+import '../styles/Game.css';
 
-function App() {
+function Game() {
     return (
         <div className="App">
             <h1>Mastermind</h1>
@@ -10,4 +10,4 @@ function App() {
     );
 }
 
-export default App;
+export default Game;

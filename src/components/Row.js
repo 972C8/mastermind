@@ -28,6 +28,7 @@ class Row extends React.Component {
             //Create button representing a peg
             row.push(<button key={pos} value={color} onClick={() => this.handlePegChange(pos)}>{color}</button>)
         }
+        row.push(<button key={"btn" + this.props.row} onClick={this.props.handleAttempt}>Confirm</button>)
         return row;
     }
 
