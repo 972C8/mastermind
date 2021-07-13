@@ -1,11 +1,17 @@
 import React from 'react';
+import Evaluation from "./Evaluation";
 
 class Row extends React.Component {
 
     constructor(props) {
         super(props)
 
+        this.state = {
+            keyPegs: []
+        }
+
         this.handlePegChange = this.handlePegChange.bind(this);
+        this.handleCodeGuess = this.handleCodeGuess.bind(this);
     }
 
     //Called when a peg changes its color
@@ -15,6 +21,15 @@ class Row extends React.Component {
 
         //Callback to function with peg data
         this.props.updateColor(row, pegPos, currentColor);
+    }
+
+    //Call function to evaluate guessed code and store evaluation in state keyPegs
+    handleCodeGuess() {
+        const keyPegs = this.props.evaluateCodeGuess();
+
+        this.setState({
+            keyPegs: keyPegs
+        })
     }
 
     //Render a row consisting of 4 pegs (buttons)
@@ -28,7 +43,8 @@ class Row extends React.Component {
             //Create button representing a peg
             row.push(<button key={pos} value={color} onClick={() => this.handlePegChange(pos)}>{color}</button>)
         }
-        row.push(<button key={"btn" + this.props.row} onClick={this.props.handleAttempt}>Confirm</button>)
+        row.push(<button key={"btn" + this.props.row} onClick={this.handleCodeGuess}>Confirm</button>)
+        row.push(<Evaluation key={"key" + this.props.row} keyPegs={this.state.keyPegs}/>)
         return row;
     }
 

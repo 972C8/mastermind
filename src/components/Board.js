@@ -11,24 +11,34 @@ class Board extends React.Component {
             maxRows: 6,
             turn: 0,
             colors: ["red", "blue", "yellow", "green", "orange"],
-            currentColor: "white",
+            currentColor: "red",
             board: null,
             gameCode: null
         };
 
         this.setSelectedColor = this.setSelectedColor.bind(this);
         this.updateColor = this.updateColor.bind(this);
-        this.makeCodeGuess = this.makeCodeGuess.bind(this);
+        this.evaluateCodeGuess = this.evaluateCodeGuess.bind(this);
     }
 
     //Initialize game data
     componentDidMount() {
+        this.createNewGame();
+    }
+
+    //Create a new game with new board and game code
+    createNewGame() {
         const board = this.initializeBoard(this.state.maxRows);
         const code = this.createNewCode(this.state.colors);
 
         this.setState({
+            turn: 0,
             board: board,
             gameCode: code,
+        }, () => {
+            console.log("New game created")
+            //TODO: Remove logged solution
+            console.log("Solution: " + this.state.gameCode)
         })
     }
 
@@ -66,7 +76,7 @@ class Board extends React.Component {
             const rowPegs = this.state.board ? this.state.board[i] : [];
 
             //disable all rows except for the current turn's row
-            const row = <Row key={i} isDisabled={this.isDisabled(i)} handleAttempt={this.makeCodeGuess}
+            const row = <Row key={i} isDisabled={this.isDisabled(i)} evaluateCodeGuess={this.evaluateCodeGuess}
                              updateColor={this.updateColor}
                              currentColor={this.state.currentColor} rowPegs={rowPegs} row={i}/>;
             board.push(row)
@@ -120,7 +130,7 @@ class Board extends React.Component {
 
     //Evaluate the guessed code
     //Create evaluation of red and white pins
-    makeCodeGuess() {
+    evaluateCodeGuess() {
         //Current row according to user's turn
         const guess = this.state.board[this.state.turn];
         const code = this.state.gameCode;
@@ -134,7 +144,7 @@ class Board extends React.Component {
         //Create evaluation array consisting of red and white pins
         //White pin = color is correct
         //Red pin = color and position is correct
-        var evaluation = [];
+        let evaluation = [];
         guess.forEach((peg, key) => {
             if (code.includes(peg)) {
                 //peg color and position match -> red pin
@@ -149,11 +159,15 @@ class Board extends React.Component {
         //Sort the pins by color
         evaluation.sort();
 
-        //TODO: remove debuggers
-        console.log(evaluation);
-        console.log(code)
-
-        //TODO: Update pins
+        //Increment turn by 1. Check available turns right after
+        this.setState({turn: this.state.turn + 1}, () => {
+            //Game over if all turns have been used
+            if (this.state.turn >= this.state.maxRows) {
+                console.log("Game over!")
+                this.createNewGame()
+            }
+        })
+        return evaluation;
     }
 
     render() {
