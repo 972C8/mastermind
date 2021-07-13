@@ -8,12 +8,50 @@ class Board extends React.Component {
         super(props);
 
         this.state = {
-            maxAttempts: 6,
-            turn: 1,
+            maxRows: 6,
+            turn: 0,
+            colors: ["red", "blue", "yellow", "green", "orange"],
             currentColor: "white",
+            board: this.initializeBoard(6)
         };
 
         this.setCurrentColor = this.setCurrentColor.bind(this);
+        this.updateColor = this.updateColor.bind(this);
+    }
+
+    //Create new board with default pegs
+    initializeBoard(maxRows) {
+        const board = [];
+
+        for (let i = 0; i < maxRows; i++) {
+            var row = ["white", "white", "white", "white"]
+            board.push(row);
+        }
+        return board;
+    }
+
+    //Update board state with the new color peg
+    updateColor(rowPos, pegPos, newPegColor) {
+        //Update board with new color for relevant peg of row
+        const board = this.state.board.slice();
+
+        //Update color at given board position
+        board[rowPos][pegPos] = newPegColor;
+
+        this.setState({
+            board: board
+        })
+    }
+
+    //Create amount of rows corresponding to maxRows for the board
+    renderRows() {
+        const board = [];
+        for (let i = 0; i < this.state.maxRows; i++) {
+            //disable all rows except for the current turn's row
+            board.push(<Row key={i} isDisabled={this.isDisabled(i)} updateColor={this.updateColor}
+                            currentColor={this.state.currentColor} rowPegs={this.state.board[i]} row={i}/>)
+        }
+        return board;
     }
 
     setCurrentColor(color) {
@@ -28,26 +66,13 @@ class Board extends React.Component {
         return this.state.turn !== rowNum;
     }
 
-    //Create amount of rows corresponding to maxAttempts for the board
-    renderRows() {
-        const board = [];
-        for (let i = 1; i <= this.state.maxAttempts; i++) {
-            //disable all rows except for the current turn's row
-            board.push(<Row key={i} isDisabled={this.isDisabled(i)} currentColor={this.state.currentColor}/>)
-        }
-        return board;
-    }
-
     render() {
-        //All available colors
-        const colors = ["red", "blue", "yellow", "green", "orange"];
-
         //render the board consisting of rows
         const board = this.renderRows();
         return (
             <div>
                 {board}
-                <ColorPicker colors={colors} onColorSelected={this.setCurrentColor}/>
+                <ColorPicker colors={this.state.colors} onColorSelected={this.setCurrentColor}/>
             </div>
         );
     }
