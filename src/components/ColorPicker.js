@@ -1,32 +1,17 @@
 import React from 'react';
 
-class ColorPicker extends React.Component {
+//Return a div of buttons for all colors provided. The selected color is stored with updateSelectedColor
+const ColorPicker = ({colors, updateSelectedColor}) => {
 
-    constructor(props) {
-        super(props)
+    //Create a button for each color
+    const colorButtons = colors.map((color) =>
+        <button key={color} value={color} className={"colorpicker btn-peg btn-" + color}
+                onClick={() => updateSelectedColor(color)}/>
+    )
 
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    //Set currentColor to the selected color
-    //onColorChange() was passed from Board.js
-    handleChange(event) {
-        this.props.onColorSelected(event.target.value);
-    }
-
-    render() {
-        const colors = this.props.colors;
-
-        //Create a button for each color
-        const colorButtons = colors.map((color) =>
-            <button key={color} value={color} className={"colorpicker btn-peg btn-" + color} onClick={this.handleChange}/>
-        )
-
-        return (
-            <div className="colorpicker">{colorButtons}</div>
-        );
-    }
-
-}
+    return (
+        <div className="colorpicker">{colorButtons}</div>
+    );
+};
 
 export default ColorPicker;
