@@ -4,7 +4,7 @@ import Evaluation from "./Evaluation";
 import '../styles/Game.css';
 
 function Game() {
-    const maxRows = 3;
+    const maxRows = 6;
     const colors = ["red", "blue", "yellow", "green", "orange", "purple", "lime", "pink"];
     const defaultColor = "white";
 
@@ -13,6 +13,7 @@ function Game() {
     const [turn, setTurn] = useState(0);
     const [selectedColor, setSelectedColor] = useState("red");
     const [evaluation, setEvaluation] = useState(Array(maxRows).fill([]))
+    const [message, setMessage] = useState(null);
 
     //Execute once on first render
     useEffect(() => {
@@ -27,9 +28,9 @@ function Game() {
         setBoard(createNewBoard(defaultColor))
         setGameCode(createNewGameCode(colors))
         setTurn(0)
+        setEvaluation(Array(maxRows).fill([]))
 
-        //TODO: remove console log
-        console.log("New game created")
+        setMessage("New game code generated. Have fun solving!")
     };
 
     //Creates a new unique code of 4 colors from all existing colors
@@ -47,9 +48,29 @@ function Game() {
         return code;
     }
 
+    //Handle game over screen
+    const handleGameOver = () => {
+        //Set turn to maxRows to disable all rows
+        setTurn(maxRows)
+
+        setMessage("Game over! All available turns were consumed.")
+    }
+
+    //Show solution of game code
+    const showSolution = () => {
+        const code = gameCode ? gameCode.join(', ') : "Create a new game first!";
+        setMessage("The solution is: " + code);
+    }
+
+    //Show info on how to play
+    const showHowToPlay = () => {
+        const msg = "https://en.wikipedia.org/wiki/Mastermind_(board_game)";
+        setMessage(msg);
+    }
+
     //Update the evaluation state which re-renders the evaluation component
     const updateEvaluation = (currentRow) => {
-        //Todo: remove?
+        //the code guess of the current row
         const guess = board ? board[currentRow] : [];
 
         //Update evaluation with evaluated guess of the code
@@ -68,8 +89,7 @@ function Game() {
 
         //All colors of the row must be guessed
         if (guess.includes(defaultColor)) {
-            //TODO: no console log
-            console.log("Select a color for all pegs!")
+            setMessage("Select a color for all pegs!")
             return [];
         }
 
@@ -102,7 +122,7 @@ function Game() {
         //Check if turns are left and increment turn by 1
         const newTurn = turn + 1;
         if (newTurn >= maxRows) {
-            console.log("Game over!")
+            handleGameOver();
         } else {
             //Increment turn by 1. Check available turns right after
             setTurn(newTurn)
@@ -187,7 +207,6 @@ function Game() {
         //Create additional button and evaluation
         row.push(<button key={"btn" + row} className={"btn-confirm"}
                          onClick={() => updateEvaluation(rowNum)}>Confirm</button>)
-        //TODO: Fix evaluation
         row.push(<Evaluation key={"key" + row} keyPegs={evaluation[rowNum]}/>)
 
         return row;
@@ -213,9 +232,20 @@ function Game() {
     return (
         <div className="App">
             <h1>MasterMind</h1>
-            {gameCode}
-            {renderBoard()}
-            <ColorPicker colors={colors} updateSelectedColor={updateSelectedColor}/>
+            <div className={"top"}>
+                <button onClick={createNewGame}>Create New Game</button>
+                <button onClick={showSolution}>Show Solution</button>
+                <button onClick={showHowToPlay}>How to play</button>
+            </div>
+            <div className={"messages"}>
+                <h3>{message}</h3>
+            </div>
+            <div className={"center"}>
+                <ColorPicker colors={colors} updateSelectedColor={updateSelectedColor}/>
+                <div className={"board"}>
+                    {renderBoard()}
+                </div>
+            </div>
         </div>
     );
 }
