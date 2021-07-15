@@ -48,12 +48,20 @@ function Game() {
         return code;
     }
 
+    //Handle game won screen
+    const handleGameWon = () => {
+        //Set turn to maxRows to disable all rows
+        setTurn(maxRows);
+
+        setMessage("Game won! You guessed the code correctly.")
+    }
+
     //Handle game over screen
     const handleGameOver = () => {
         //Set turn to maxRows to disable all rows
         setTurn(maxRows)
 
-        setMessage("Game over! All available turns were consumed.")
+        setMessage("Game over! All available turns were consumed. The code was: " + gameCode.join(", "))
     }
 
     //Show solution of game code
@@ -115,6 +123,12 @@ function Game() {
                 }
             }
         )
+
+        //Handle game won
+        if (gameCode.join(',') === guess.join(',')) {
+            handleGameWon();
+            return evaluation;
+        }
 
         //Sort the pins by color
         evaluation.sort();
