@@ -5,6 +5,9 @@ Mastermind
 <p align="center">
 ReactJS Implementation of the popular 70s game Mastermind
 </p>
+<p align="center">
+Play the game at <a href="https://972c8.github.io/mastermind">https://972c8.github.io/mastermind/</a>
+</p>
 
 ---
 
