@@ -1,20 +1,21 @@
 import React from 'react';
 
-class Evaluation extends React.Component {
+//Render 4 keyPegs of red and white based on evaluation (keys)
+const Evaluation = (keys) => {
 
-    render() {
-        const keys = this.props.keyPegs;
+    //map the keyPegs (red or white) to <span>-elements
+    let pegs = keys.keyPegs.map((peg, index) => <span key={index} className={"key-peg key-" + peg}/>);
 
-        //map the keyPegs (red or white) to <span>-elements
-        const pegs = keys.map((peg, index) => <span key={index} className={peg}/>);
-
-        return (
-            keys.length > 0 &&
-            <div className="key-pegs">
-                {pegs}
-            </div>
-        );
+    //Fill array with default keyPegs so that always 4 keyPegs are rendered
+    for (let i = pegs.length; i < 4; i++) {
+        pegs.push(<span key={i} className={"key-peg"}/>)
     }
+
+    return (
+        <div className="key-pegs">
+            {pegs}
+        </div>
+    );
 }
 
 export default Evaluation;

@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import '../styles/Game.css';
 import ColorPicker from "./ColorPicker";
+import Evaluation from "./Evaluation";
+import '../styles/Game.css';
 
 function Game() {
+    const maxRows = 3;
+    const colors = ["red", "blue", "yellow", "green", "orange", "purple", "lime", "pink"];
+    const defaultColor = "white";
+
     const [board, setBoard] = useState(null);
     const [gameCode, setGameCode] = useState(null);
     const [turn, setTurn] = useState(0);
     const [selectedColor, setSelectedColor] = useState("red");
-
-    const maxRows = 6;
-    const colors = ["red", "blue", "yellow", "green", "orange", "purple", "lime", "pink"];
-
-    const defaultColor = "white";
+    const [evaluation, setEvaluation] = useState(Array(maxRows).fill([]))
 
     //Execute once on first render
     useEffect(() => {
@@ -46,40 +47,55 @@ function Game() {
         return code;
     }
 
+    //Update the evaluation state which re-renders the evaluation component
+    const updateEvaluation = (currentRow) => {
+        //Todo: remove?
+        const guess = board ? board[currentRow] : [];
+
+        //Update evaluation with evaluated guess of the code
+        setEvaluation((evaluation) => {
+            //Update the current row with the new evaluation
+            evaluation[currentRow] = evaluateGuess(guess);
+
+            return evaluation;
+        })
+    }
+
     //Evaluate the guessed code
     //Create evaluation of red and white pins
-    const evaluateCodeGuess = () => {
+    const evaluateGuess = (guess) => {
         let evaluation = [];
 
-        //Current row according to user's turn
-        const guess = board[turn];
-
+        //All colors of the row must be guessed
         if (guess.includes(defaultColor)) {
-            //TODO: return false
+            //TODO: no console log
             console.log("Select a color for all pegs!")
-            return evaluation;
-        }
-
-        //Return true if guess is correct
-        if (gameCode.join(',') === guess.join(',')) {
-            //Todo: return true
-            console.log("success")
+            return [];
         }
 
         //Create evaluation array consisting of red and white pins
         //White pin = color is correct
         //Red pin = color and position is correct
         guess.forEach((peg, key) => {
-            if (gameCode.includes(peg)) {
-                //peg color and position match -> red pin
-                if (gameCode.indexOf(peg) === key) {
+
+                //Correct guess. All pins are red
+                if (gameCode.join(',') === guess.join(',')) {
                     evaluation.push("red");
                 } else {
-                    //only peg color matches
-                    evaluation.push("white");
+                    //Add red/white pins based on evaluation
+                    if (gameCode.includes(peg)) {
+                        //peg color and position match -> red pin
+                        if (gameCode.indexOf(peg) === key) {
+                            evaluation.push("red");
+                        } else {
+                            //only peg color matches
+                            evaluation.push("white");
+                        }
+                    }
                 }
             }
-        })
+        )
+
         //Sort the pins by color
         evaluation.sort();
 
@@ -87,7 +103,6 @@ function Game() {
         const newTurn = turn + 1;
         if (newTurn >= maxRows) {
             console.log("Game over!")
-            createNewGame()
         } else {
             //Increment turn by 1. Check available turns right after
             setTurn(newTurn)
@@ -105,6 +120,7 @@ function Game() {
         }
         return board;
     }
+
     //Update board with the new color
     //If the color already exists in the row. Swap the positions of the two colors for user convenience.
     const updateBoardColor = (rowNum, pegPos) => {
@@ -170,9 +186,9 @@ function Game() {
 
         //Create additional button and evaluation
         row.push(<button key={"btn" + row} className={"btn-confirm"}
-                         onClick={evaluateCodeGuess}>Confirm</button>)
+                         onClick={() => updateEvaluation(rowNum)}>Confirm</button>)
         //TODO: Fix evaluation
-        //row.push(<Evaluation key={"key" + row} keyPegs={null}/>)
+        row.push(<Evaluation key={"key" + row} keyPegs={evaluation[rowNum]}/>)
 
         return row;
     }
