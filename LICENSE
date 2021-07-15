@@ -1,30 +1,3 @@
-<h1 align="center">
-Mastermind
-</h1>
-
-<p align="center">
-ReactJS Implementation of the popular 70s game Mastermind
-</p>
-
----
-
-### How is Mastermind played?
-
-A good summary of mastermind is provided by wikipedia: https://en.wikipedia.org/wiki/Mastermind_(board_game)
-
-### How was Mastermind implemented?
-
-The implementation is based on React: https://reactjs.org/
-
-### Contributing
-
-Feel free to contribute to either improve the existing code or to add functionality.
-
-### License
-
-mastermind is released under the MIT license.
-
-```
 MIT License
 
 Copyright (c) 2021 972C8
@@ -38,4 +11,11 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-```
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

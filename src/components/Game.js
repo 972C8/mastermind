@@ -260,6 +260,8 @@ function Game() {
                     {renderBoard()}
                 </div>
             </div>
+            <h6><p>Find the open source code at <a
+                href={"https://github.com/972C8/mastermind"}>https://github.com/972C8/mastermind</a></p></h6>
         </div>
     );
 }
